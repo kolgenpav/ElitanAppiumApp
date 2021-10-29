@@ -2,6 +2,7 @@ package ua.com.elitan.web;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -79,5 +80,13 @@ public class ElitanWebTest {
         WebElement messageElement = driver.findElement(
                 By.cssSelector(".woocommerce-MyAccount-content > p:nth-child(2)"));
         Assertions.assertEquals(expected, messageElement.getText());
+    }
+
+    /**
+     * Appium driver closing.
+     */
+    @AfterAll
+    public static void tearDown() {
+        driver.quit();
     }
 }
