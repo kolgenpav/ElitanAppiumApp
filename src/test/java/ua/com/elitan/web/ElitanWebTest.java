@@ -37,7 +37,7 @@ public class ElitanWebTest {
      * Create appium driver with settled desire capabilities.
      * <p>
      * IMPORTANT:
-     * You must correct desired capabilities for your case
+     * You must correct desired capabilities for your case.
      *
      * @throws MalformedURLException if wrong appium server URL
      */
@@ -49,13 +49,14 @@ public class ElitanWebTest {
             capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "device");
             capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9.0");
         } else {
-            capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
+            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Google Nexus 5");
             capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "5.0");
         }
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,
                 "UiAutomator2");
-        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Google Nexus 5");
         capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Chrome");
+
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
