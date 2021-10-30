@@ -49,8 +49,10 @@ public class ElitanWebTest {
             capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "device");
             capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9.0");
         } else {
-            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Google Nexus 5");
-            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "5.0");
+//            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Google Nexus 5");
+            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android10Phone");
+//            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "5.0");
+            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "10.0");
         }
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,
