@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ua.com.elitan.hybrid.ElitanHybridTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-10-30T14:47:43" hostname="KFNB" time="14.902">
+  <properties/>
+  <testcase name="testLogin()" classname="ua.com.elitan.hybrid.ElitanHybridTest" time="14.902"/>
+  <system-out><![CDATA[NATIVE_APP
+WEBVIEW_ua.com.elitan.elitanmobile
+]]></system-out>
+  <system-err><![CDATA[окт. 30, 2021 5:47:42 PM io.appium.java_client.remote.AppiumCommandExecutor$1 lambda$0
+INFO: Detected dialect: W3C
+]]></system-err>
+</testsuite>
