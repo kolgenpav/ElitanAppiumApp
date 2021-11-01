@@ -49,9 +49,7 @@ public class ElitanWebTest {
             capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "device");
             capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9.0");
         } else {
-//            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Google Nexus 5");
             capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android10Phone");
-//            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "5.0");
             capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "10.0");
         }
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
@@ -73,10 +71,11 @@ public class ElitanWebTest {
         String password = "testtest";
         String username = email.substring(0, email.indexOf('@'));
 
-        driver.get("https://elitan.com.ua/my-account/");
-        driver.findElement(By.xpath("//input[@id='username']")).sendKeys(email);
-        driver.findElement(By.xpath("//input[@id='password']")).sendKeys(password);
-        driver.findElement(By.cssSelector("#rememberme")).click();
+        driver.get("https://elitan.com.ua/");
+        driver.findElement(By.linkText("Вход/ Регистрация")).click();
+        /*Opens authorization page /my-account*/
+        driver.findElement(By.cssSelector("#username")).sendKeys(email);
+        driver.findElement(By.cssSelector("#password")).sendKeys(password);
         driver.findElement(By.cssSelector(".woocommerce-form-login__submit")).click();
 
         String expected = "Добро пожаловать, " + username + " (не " + username + "? Выйти)";
