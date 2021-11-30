@@ -5,7 +5,7 @@ plugins {
 group 'ua.com.elitan'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+//sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation group: 'io.appium', name: 'java-client', version: '7.3.0'
+    implementation group: 'io.appium', name: 'java-client', version: '7.6.0'
 }
 
 test {

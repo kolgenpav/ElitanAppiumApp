@@ -7,7 +7,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  *  To stop appium server use Ctrl+C keyboard combination.
  */
-public class ElitanNativeTest {
+class ElitanNativeTest {
 
     protected static AndroidDriver<WebElement> driver;
 
@@ -69,7 +68,7 @@ public class ElitanNativeTest {
      * Tests login for registered user.
      */
     @Test
-    public void testLogin() {
+    void testLogin() {
         /*Registered user login and password*/
         String email = "usertest@gmail.com";
         String password = "testtest";

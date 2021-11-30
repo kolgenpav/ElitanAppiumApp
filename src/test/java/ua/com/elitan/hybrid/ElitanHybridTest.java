@@ -23,12 +23,12 @@ import java.util.concurrent.TimeUnit;
  * Before test you need run appium server with command-line:
  * appium --chromedriver-executable /path/to/my/chromedriver
  * <p>
- *  The chromedriver version have to match System Web View application
- *  in the emulator or real device.
- *  <p>
- *  To stop appium server use Ctrl+C keyboard combination.
+ * The chromedriver version have to match System Web View application
+ * in the emulator or real device.
+ * <p>
+ * To stop appium server use Ctrl+C keyboard combination.
  */
-public class ElitanHybridTest {
+class ElitanHybridTest {
 
     protected static AndroidDriver<WebElement> driver;
 
@@ -80,7 +80,7 @@ public class ElitanHybridTest {
      * Tests login for registered user.
      */
     @Test
-    public void testLogin() {
+    void testLogin() {
         /*Registered user login and password*/
         String email = "usertest@gmail.com";
         String password = "testtest";
@@ -96,6 +96,113 @@ public class ElitanHybridTest {
         String expected = "Добро пожаловать, " + username + " (не " + username + "? Выйти)";
         WebElement messageElement = driver.findElement(
                 By.cssSelector(".woocommerce-MyAccount-content > p:nth-child(2)"));
+        Assertions.assertEquals(expected, messageElement.getText());
+    }
+
+    /**
+     * Tests login for non-registered user.
+     */
+    @Test
+    void testInvalidLogin() {
+        /*Registered user login and password*/
+        String email = "thereissome@textgmail.com";
+        String password = "qwerty";
+        String username = email.substring(0, email.indexOf('@'));
+
+        driver.get("https://elitan.com.ua/my-account/");
+        driver.findElement(By.xpath("//input[@id='username']")).sendKeys(email);
+        driver.findElement(By.xpath("//input[@id='password']")).sendKeys(password);
+        driver.findElement(By.cssSelector("#rememberme")).click();
+        driver.findElement(By.cssSelector(".woocommerce-form-login__submit")).click();
+
+        String expected = "ERROR";
+        WebElement messageElement = driver.findElement(
+                By.xpath("//*[@id=\"post-7\"]/div/div/div/div/div/div[1]/ul/li/strong"));
+        Assertions.assertEquals(expected, messageElement.getText());
+    }
+
+    /*
+     * Tests registration with valid data
+     */
+    @Test
+    void testValidRegistration() {
+        String name = "TestQA";
+        String surname = "QATest";
+        String phone = "0665711464";
+        String email = "flydiecry+211103@gmail.com";
+        String password = "Test1234!";
+
+        driver.get("https://elitan.com.ua/my-account/");
+        driver.findElement(By.xpath("//*[@id=\"reg_billing_first_name\"]")).sendKeys(name);
+        driver.findElement(By.xpath("//*[@id=\"reg_billing_last_name\"]")).sendKeys(surname);
+        driver.findElement(By.xpath("//*[@id=\"reg_billing_phone\"]")).sendKeys(phone);
+        driver.findElement(By.xpath("//*[@id=\"reg_email\"]")).sendKeys(email);
+        driver.findElement(By.xpath("//*[@id=\"reg_password\"]")).sendKeys(password);
+        driver.findElement(By.xpath("//*[@id=\"customer_login\"]/div[2]/form/p[6]/button")).click();
+
+        /*Для успешной регистрации*/
+//        String expected = "Выйти";
+//        WebElement messageElement = driver.findElement(
+//                By.cssSelector("#post-7 > div > div > div > div > div > div > p:nth-child(2) > a"));
+//        String messageText = messageElement.getText();
+
+        /*Для регистрации уже зарегистрированного пользователя*/
+        String expected = "Ошибка:";
+        WebElement messageElement = driver.findElement(
+                By.xpath("//*[@id=\"post-7\"]/div/div/div/div/div/div[1]/ul/li"));
+        String[] messageWords = messageElement.getText().split( "\\s");
+        String messageText = messageWords[0];
+
+        Assertions.assertEquals(expected, messageText);
+    }
+
+    /**
+     * Tests registration with Empty Fields
+     */
+    @Test
+    void testInvalidRegistrationEmptyFields() {
+        driver.get("https://elitan.com.ua/my-account/");
+        driver.findElement(By.xpath("//*[@id=\"customer_login\"]/div[2]/form/p[6]/button")).click();
+
+        String expected = "Ошибка:";
+        WebElement messageElement = driver.findElement(
+                By.xpath("//*[@id=\"post-7\"]/div/div/div/div/div/div[1]/ul/li"));
+        String[] messageWords = messageElement.getText().split( "\\s");
+        String messageText = messageWords[0];
+
+        Assertions.assertEquals(expected, messageText);
+    }
+
+    /**
+     * Tests changing contact info
+     */
+    @Test
+    void changeContactInfo() {
+        String email = "usertest@gmail.com";
+        String password = "testtest";
+        String username = email.substring(0, email.indexOf('@'));
+
+        driver.get("https://elitan.com.ua/my-account/");
+        driver.findElement(By.xpath("//input[@id='username']")).sendKeys(email);
+        driver.findElement(By.xpath("//input[@id='password']")).sendKeys(password);
+        driver.findElement(By.cssSelector("#rememberme")).click();
+        driver.findElement(By.cssSelector(".woocommerce-form-login__submit")).click();
+        driver.findElement(By.cssSelector(
+                "#post-7 > div > div > div > div > div > nav > ul > li.woocommerce-MyAccount-navigation-link.woocommerce-MyAccount-navigation-link--edit-account > a")).click();
+
+        String name = "Tessst";
+        String surname = "QATesterkok";
+        String dispname = "Testirovshichik";
+
+        driver.findElement(By.xpath("//*[@id=\"account_first_name\"]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"account_first_name\"]")).sendKeys(name);
+        driver.findElement(By.xpath("//*[@id=\"account_last_name\"]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"account_last_name\"]")).sendKeys(surname);
+        driver.findElement(By.xpath("//*[@id=\"account_display_name\"]")).clear();
+        driver.findElement(By.xpath("//*[@id=\"account_display_name\"]")).sendKeys(dispname);
+        driver.findElement(By.cssSelector("#post-7 > div > div > div > div > div > div > form > p:nth-child(9) > button")).click();
+        String expected = "Профиль успешно изменён.";
+        WebElement messageElement = driver.findElement(By.cssSelector("#post-7 > div > div > div > div > div > div > div > div"));
         Assertions.assertEquals(expected, messageElement.getText());
     }
 
