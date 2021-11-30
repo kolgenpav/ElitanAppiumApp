@@ -2,19 +2,24 @@ package ua.com.elitan.hybrid;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 /**
  * Testing of elitan.com.ua mobile hybrid-application.
@@ -26,6 +31,8 @@ import java.util.concurrent.TimeUnit;
  * The chromedriver version have to match System Web View application
  * in the emulator or real device.
  * <p>
+ * If test run on real device, the device must be unlocked.
+ * <p>
  * To stop appium server use Ctrl+C keyboard combination.
  */
 class ElitanHybridTest {
@@ -35,7 +42,7 @@ class ElitanHybridTest {
     protected static String appName = "ElitanMobileHybrid.apk";
 
     /*Please set true for real device and false for emulator testing*/
-    private static final boolean isRealDevice = false;
+    private static final boolean isRealDevice = true;
 
     /**
      * Create appium driver with settled desire capabilities.
@@ -84,7 +91,8 @@ class ElitanHybridTest {
         /*Registered user login and password*/
         String email = "usertest@gmail.com";
         String password = "testtest";
-        String username = email.substring(0, email.indexOf('@'));
+//        String username = email.substring(0, email.indexOf('@'));
+        String username = "Testirovshichik";
 
         driver.get("https://elitan.com.ua/");
         driver.findElement(By.linkText("Вход/ Регистрация")).click();
@@ -107,7 +115,8 @@ class ElitanHybridTest {
         /*Registered user login and password*/
         String email = "thereissome@textgmail.com";
         String password = "qwerty";
-        String username = email.substring(0, email.indexOf('@'));
+//        String username = email.substring(0, email.indexOf('@'));
+        String username = "Testirovshichik";
 
         driver.get("https://elitan.com.ua/my-account/");
         driver.findElement(By.xpath("//input[@id='username']")).sendKeys(email);
@@ -150,7 +159,7 @@ class ElitanHybridTest {
         String expected = "Ошибка:";
         WebElement messageElement = driver.findElement(
                 By.xpath("//*[@id=\"post-7\"]/div/div/div/div/div/div[1]/ul/li"));
-        String[] messageWords = messageElement.getText().split( "\\s");
+        String[] messageWords = messageElement.getText().split("\\s");
         String messageText = messageWords[0];
 
         Assertions.assertEquals(expected, messageText);
@@ -167,7 +176,7 @@ class ElitanHybridTest {
         String expected = "Ошибка:";
         WebElement messageElement = driver.findElement(
                 By.xpath("//*[@id=\"post-7\"]/div/div/div/div/div/div[1]/ul/li"));
-        String[] messageWords = messageElement.getText().split( "\\s");
+        String[] messageWords = messageElement.getText().split("\\s");
         String messageText = messageWords[0];
 
         Assertions.assertEquals(expected, messageText);
@@ -204,6 +213,50 @@ class ElitanHybridTest {
         String expected = "Профиль успешно изменён.";
         WebElement messageElement = driver.findElement(By.cssSelector("#post-7 > div > div > div > div > div > div > div > div"));
         Assertions.assertEquals(expected, messageElement.getText());
+    }
+
+    /**
+     * Tests adding item to the cart
+     */
+    @Test
+    void addItemToTheCart() {
+        WebElement addToCartButton = driver.findElement(By
+                .xpath("//*[@id=\"post-24\"]/div/div/div/div/div[8]/div/div/div/div/ul/li[1]/a[2]"));
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", addToCartButton);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        WebElement goToCartButton = driver.findElement(By
+                .xpath("//*[@id=\"masthead\"]/div[2]/div/div[3]/div[3]/div[1]/a"));
+        js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", goToCartButton);
+
+        String expected = "Портмоне Pro-Covers ПКМ-40, черный";
+        WebElement messageElement = driver.findElement(By
+                .xpath("//*[@id=\"post-5\"]/div/div/div/div/div/form/table/tbody/tr[1]/td[3]/a"));
+        String messageText = messageElement.getText();
+        Assertions.assertEquals(expected, messageText);
+    }
+
+    /**
+     * Tests removing item from the cart
+     */
+    @Test
+    void removeItemFromTheCart() {
+
+        driver.get("https://elitan.com.ua/cart/");
+
+        String expected = "Ваша корзина пока пуста.";
+        WebElement messageElement = driver.findElement(
+                By.xpath("//*[@id=\"post-5\"]/div/div/div/div/div/p[1]"));
+        String messageText = messageElement.getText();
+        Assertions.assertEquals(expected, messageText);
     }
 
     /**

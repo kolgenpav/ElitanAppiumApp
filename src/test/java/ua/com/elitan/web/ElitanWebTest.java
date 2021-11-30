@@ -4,6 +4,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -28,7 +29,7 @@ class ElitanWebTest {
     protected static AndroidDriver<WebElement> driver;
 
     /*Please set true for real device and false for emulator testing*/
-    private static final boolean isRealDevice = false;
+    private static final boolean isRealDevice = true;
 
     /**
      * Create appium driver with settled desire capabilities.
@@ -66,7 +67,8 @@ class ElitanWebTest {
         /*Registered user login and password*/
         String email = "usertest@gmail.com";
         String password = "testtest";
-        String username = email.substring(0, email.indexOf('@'));
+//        String username = email.substring(0, email.indexOf('@'));
+        String username = "Testirovshichik";
 
         driver.get("https://elitan.com.ua/");
         driver.findElement(By.linkText("Вход/ Регистрация")).click();
@@ -192,61 +194,45 @@ class ElitanWebTest {
     /**
      * Tests adding item to the cart
      */
-    @Disabled("ТЕСТ ВРЕМЕННО СЛОМАН, ПРИЧИНА - ЛОКАТОРЫ")
     @Test
-    void addItemToTheCart() { //ТЕСТ ВРЕМЕННО СЛОМАН, ПРИЧИНА - ЛОКАТОРЫ
-        /*Registered user login and password*/
-        String email = "usertest@gmail.com";
-        String password = "testtest";
-        String username = email.substring(0, email.indexOf('@'));
+    void addItemToTheCart() {
+        WebElement addToCartButton = driver.findElement(By
+                .xpath("//*[@id=\"post-24\"]/div/div/div/div/div[8]/div/div/div/div/ul/li[1]/a[2]"));
 
-        driver.get("https://elitan.com.ua/my-account/");
-        driver.findElement(By.xpath("//input[@id='username']")).sendKeys(email);
-        driver.findElement(By.xpath("//input[@id='password']")).sendKeys(password);
-        driver.findElement(By.cssSelector("#rememberme")).click();
-        driver.findElement(By.cssSelector(".woocommerce-form-login__submit")).click();
-        driver.findElement(By.cssSelector("#masthead > div.middle-header-wrapper.clearfix > div > div.logo-wrapper.clearfix > a > img")).click();
-        driver.findElement(By.cssSelector("#post-24 > div > div > div > div > div:nth-child(8) > div > div > div > div > ul > " +
-                "li.product.type-product.post-13392.status-publish.first.instock.product_cat-portmone.has-post-thumbnail.sale.purchasable.product-type-simple > " +
-                "figure > a:nth-child(2) > img")).click();
-        driver.findElement(By.xpath("//*[@id=\"product-13392\"]/div[2]/form/button"));
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", addToCartButton);
 
-        driver.get("https://elitan.com.ua/cart/");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        WebElement goToCartButton = driver.findElement(By
+                .xpath("//*[@id=\"masthead\"]/div[2]/div/div[3]/div[3]/div[1]/a"));
+        js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", goToCartButton);
 
         String expected = "Портмоне Pro-Covers ПКМ-40, черный";
-        WebElement messageElement = driver.findElement(
-                By.cssSelector("#post-5 > div > div > div > div > div > form > table > tbody > tr.woocommerce-cart-form__cart-item.cart_item > " +
-                        "td.product-name"));
-        Assertions.assertEquals(expected, messageElement.getText());
+        WebElement messageElement = driver.findElement(By
+                .xpath("//*[@id=\"post-5\"]/div/div/div/div/div/form/table/tbody/tr[1]/td[3]/a"));
+        String messageText = messageElement.getText();
+        Assertions.assertEquals(expected, messageText);
     }
 
     /**
      * Tests removing item from the cart
      */
-    @Disabled("ТЕСТ ВРЕМЕННО СЛОМАН, ПРИЧИНА - ЛОКАТОРЫ")
     @Test
-    void removeItemFromTheCart() { //ТЕСТ ВРЕМЕННО СЛОМАН, ПРИЧИНА - ЛОКАТОРЫ
-        /*Registered user login and password*/
-        String email = "usertest@gmail.com";
-        String password = "testtest";
-        String username = email.substring(0, email.indexOf('@'));
-
-        driver.get("https://elitan.com.ua/my-account/");
-        driver.findElement(By.xpath("//input[@id='username']")).sendKeys(email);
-        driver.findElement(By.xpath("//input[@id='password']")).sendKeys(password);
-        driver.findElement(By.cssSelector("#rememberme")).click();
-        driver.findElement(By.cssSelector(".woocommerce-form-login__submit")).click();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    void removeItemFromTheCart() {
 
         driver.get("https://elitan.com.ua/cart/");
-        //driver.findElement(By.cssSelector("#masthead > div.middle-header-wrapper.clearfix > div > div.wishlist-cart-wrapper.clearfix > div.cart-wrapper > div.estore-cart-views > a > i")).click();
-        driver.findElement(By.xpath("//*[@id=\"post-5\"]/div/div/div/div/div/form/table/tbody/tr[1]/td[1]/a")).click();
 
         String expected = "Ваша корзина пока пуста.";
         WebElement messageElement = driver.findElement(
-                By.cssSelector("#post-5 > div > div > div > div > div > div > p"));
-        Assertions.assertEquals(expected, messageElement.getText());
+                By.xpath("//*[@id=\"post-5\"]/div/div/div/div/div/p[1]"));
+        String messageText = messageElement.getText();
+        Assertions.assertEquals(expected, messageText);
     }
 
     /**
