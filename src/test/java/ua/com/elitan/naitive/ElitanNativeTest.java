@@ -2,15 +2,14 @@ package ua.com.elitan.naitive;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import ua.com.elitan.util.ElitanUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +30,7 @@ class ElitanNativeTest {
     protected static String appName = "ElitanMobileNative.apk";
 
     /*Please set true for real device and false for emulator testing*/
-    private static final boolean isRealDevice = false;
+    private static final boolean isRealDevice = true;
 
     /**
      * Create appium driver with settled desire capabilities.
@@ -43,22 +42,11 @@ class ElitanNativeTest {
      */
     @BeforeAll
     public static void setUpClass() throws IOException {
-        File classpathRoot = new File(System.getProperty("user.dir"));
-        File appDir = new File(classpathRoot, "apps");
-        File app = new File(appDir.getCanonicalPath(), appName);
+        ElitanUtils.getAppFile(appName);
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        if (isRealDevice) {
-            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "device");
-            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9.0");
-        } else {
-            capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Android10Phone");
-            capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "10.0");
-        }
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
-        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,
-                "UiAutomator2");
-        capabilities.setCapability("app", app.getAbsolutePath());
+        DesiredCapabilities capabilities = ElitanUtils.getCommonDesiredCapabilities(isRealDevice);
+
+        capabilities.setCapability("app", ElitanUtils.getAppFile(appName).getAbsolutePath());
 
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -72,7 +60,6 @@ class ElitanNativeTest {
         /*Registered user login and password*/
         String email = "usertest@gmail.com";
         String password = "testtest";
-//        String username = email.substring(0, email.indexOf('@'));
 
         driver.findElementById("ua.com.elitan.elitanmobilenative:id/emailText").sendKeys(email);
         driver.findElementById("ua.com.elitan.elitanmobilenative:id/passwordText").sendKeys(password);
